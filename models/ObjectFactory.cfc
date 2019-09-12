@@ -1,6 +1,6 @@
 component {
 
-	function getSettings() inject="coldbox:setting:telesign" {}
+	function getSettings() provider="coldbox:setting:telesign" {}
 
 	function get(required string class) {
 		var libs = [
