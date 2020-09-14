@@ -5,7 +5,7 @@ component {
 	this.author 			= "Sean Daniels";
 	this.webURL 			= "";
 	this.description 		= "Telesign API interface";
-	this.version			= "1.0.0";
+	this.version			= "2.0.0";
 	// If true, looks for views in the parent first, if not found, then in the module. Else vice-versa
 	this.viewParentLookup 	= true;
 	// If true, looks for layouts in the parent first, if not found, then in module. Else vice-versa
@@ -22,15 +22,10 @@ component {
 	this.dependencies 		= [];
 
 	function configure(){
-
-		// parent settings
-		parentSettings = {
-
-		};
-
 		// module settings - stored in modules.name.settings
 		settings = {
-
+			 "customerID":""
+			,"apiKey":""
 		};
 
 		// SES Routes
