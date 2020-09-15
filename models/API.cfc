@@ -10,13 +10,17 @@ component {
 		return this;
 	}
 
-	private struct function call(required string path, required string method, struct params={}) {
+	private struct function call(required string path, required string method, struct params={}, struct body={}) {
 		var cfhttp = {};
 		var auth = toBase64("#settings.customerID#:#settings.apiKey#");
 		http url="#endpoint##arguments.path#" method="#arguments.method#" result="cfhttp" {
 			httpparam type="header" name="Authorization" value="Basic #auth#";
 			for (local.arg in arguments.params) {
 				httpparam type="#arguments.method=='post'?'formfield':'url'#" name="#local.arg#" value="#arguments.params[local.arg]#";
+			}
+			if (arguments.body.len()) {
+				httpparam type="header" name="Content-Type" value="application/json";
+				httpparam type="body" value="#serializeJSON(arguments.body)#";
 			}
 		}
 
@@ -37,22 +41,26 @@ component {
 		return apiResult;  
 	}
 
-	struct function score(required string phone, required string ucid) {
+	struct function contactMatch(required string phone, required string ucid, required string first_name, required string last_name, string date_of_birth) {
 		// strip non-numeric
 		arguments.phone = rereplace(arguments.phone,'[^0-9]','','all');
+		
+		var body = {
+			 ucid:arguments.ucid
+		}
 
-		var Phone = Factory.get("com.telesign.phoneid.PhoneId");
-		var result = Phone.score( arguments.phone, arguments.ucid );
-		return deserializeJSON(result);
-	}
+		body.addons = {
+			contact_match: {
+				 first_name:arguments.first_name
+				,last_name:arguments.last_name
+			}
+		}
 
-	struct function contact(required string phone, required string ucid) {
-		// strip non-numeric
-		arguments.phone = rereplace(arguments.phone,'[^0-9]','','all');
+		if (!isnull(arguments.date_of_birth))
+			body.addons.contact_match.date_of_birth = arguments.date_of_birth;
 
-		var Phone = Factory.get("com.telesign.phoneid.PhoneId");
-		var result = Phone.contact( arguments.phone, arguments.ucid );
-		return deserializeJSON(result);
+		var result = call(path:"/v1/phoneid/#arguments.phone#",method:"POST",body:body);
+		return result;
 	}
 
 	struct function verifySMS(required string phone, string lang, string code, string template="Your confirmation code is $$CODE$$", string ucid) {
@@ -78,13 +86,26 @@ component {
 		return result;
 	}
 
-	struct function verifyCall(required string phone, string lang, string code) {
+	struct function verifyCall(required string phone, string lang, string code, string call_forward_action="Block", string ucid) {
 		// strip non-numeric
 		arguments.phone = rereplace(arguments.phone,'[^0-9]','','all');
 
-		var Verify = Factory.get("com.telesign.verify.Verify");
-		var result = Verify.call( arguments.phone, arguments.lang ?: nullValue(), arguments.code ?: nullValue(), nullValue(), 0, nullValue(), false );
-		return deserializeJSON(result);
+		var params = {
+			  phone_number : arguments.phone
+			 ,call_forward_action : arguments.call_forward_action
+		}
+
+		if (!isnull(arguments.lang))
+			params.language = arguments.lang;
+
+		if (!isnull(arguments.code))
+			params.verify_code = arguments.code;
+
+		if (!isnull(arguments.ucid))
+			params.ucid = arguments.ucid;
+
+		var result = call("/v1/verify/call","POST",params);
+		return result;
 	}
 
 	struct function verifyStatus(required string referenceID, required string verification) {

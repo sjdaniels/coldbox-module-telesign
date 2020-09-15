@@ -1,8 +1,6 @@
 <cfscript>
 	param name="args.placeholder" default="Full Phone Number";
 	param name="args.button" default="Verify Phone";
-
-
 </cfscript>
 <cfoutput>
 	<h1>Telesign Verification</h1>
