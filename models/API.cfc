@@ -54,6 +54,7 @@ component {
 				 first_name:arguments.first_name
 				,last_name:arguments.last_name
 			}
+			,contact:{}
 		}
 
 		if (!isnull(arguments.date_of_birth))
