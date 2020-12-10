@@ -23,7 +23,7 @@ component {
 				httpparam type="body" value="#serializeJSON(arguments.body)#";
 			}
 		}
-
+		
 		return parseResponse(cfhttp);
 	}
 
@@ -39,6 +39,14 @@ component {
 		}
 									
 		return apiResult;  
+	}
+
+    struct function phoneID(required string phone) {
+		// strip non-numeric
+		arguments.phone = rereplace(arguments.phone,'[^0-9]','','all');
+		
+		var result = call(path:"/v1/phoneid/#arguments.phone#",method:"POST");
+		return result;
 	}
 
 	struct function contactMatch(required string phone, required string ucid, required string first_name, required string last_name, string date_of_birth) {
