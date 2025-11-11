@@ -77,7 +77,7 @@ component {
 		arguments.phone = rereplace(arguments.phone,'[^0-9]','','all');
 
 		var params = {
-			  phone_number : arguments.phone
+			  phone_number : getPhoneNumber(arguments.phone)
 			 ,template : arguments.template
 		}
 
@@ -124,5 +124,13 @@ component {
 
 		var result = call("/v1/verify/#arguments.referenceID#","GET",params);
 		return result;
+	}
+
+	string function getPhoneNumber(required string phone) {
+		if (controller.getSetting("isLocalDev", false)) {
+			local.env=  new coldbox.system.core.delegates.Env();
+			return local.env.getSystemSetting("TESTING_PHONE_INTERCEPT","+15125548702");
+		}
+		return arguments.phone;
 	}
 }
