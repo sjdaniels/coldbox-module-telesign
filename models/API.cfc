@@ -2,6 +2,7 @@ component {
 	processingdirective preserveCase=true;
 
 	property name="settings" inject="coldbox:moduleSettings:telesign";
+	property name="isLocalDev" inject="coldbox:setting:isLocalDev";
 
 	public API function init() {
 		endpoint 	= "https://rest-ww.telesign.com";
@@ -127,7 +128,7 @@ component {
 	}
 
 	string function getPhoneNumber(required string phone) {
-		if (controller.getSetting("isLocalDev", false)) {
+		if (isLocalDev ?: false) {
 			local.env=  new coldbox.system.core.delegates.Env();
 			return local.env.getSystemSetting("TESTING_PHONE_INTERCEPT","+15125548702");
 		}
