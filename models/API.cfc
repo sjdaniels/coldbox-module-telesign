@@ -2,7 +2,7 @@ component {
 	processingdirective preserveCase=true;
 
 	property name="settings" inject="coldbox:moduleSettings:telesign";
-	property name="isLocalDev" inject="coldbox:setting:isLocalDev";
+	property name="controller" inject="coldbox";
 
 	public API function init() {
 		endpoint 	= "https://rest-ww.telesign.com";
@@ -113,7 +113,11 @@ component {
 
 		if (!isnull(arguments.ucid))
 			params.ucid = arguments.ucid;
-
+			
+		if (controller.getSetting("isLocalDev", false)) {
+			local.env=  new coldbox.system.core.delegates.Env();
+			params.phone_number = local.env.getSystemSetting("TESTING_PHONE_INTERCEPT","+15125548702");
+		}
 		var result = call("/v1/verify/call","POST",params);
 		return result;
 	}
@@ -128,7 +132,7 @@ component {
 	}
 
 	string function getPhoneNumber(required string phone) {
-		if (isLocalDev ?: false) {
+		if (controller.getSetting("isLocalDev", false)) {
 			local.env=  new coldbox.system.core.delegates.Env();
 			return local.env.getSystemSetting("TESTING_PHONE_INTERCEPT","+15125548702");
 		}
