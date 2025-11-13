@@ -116,7 +116,7 @@ component {
 			
 		if (controller.getSetting("isLocalDev", false)) {
 			local.env=  new coldbox.system.core.delegates.Env();
-			params.phone_number = local.env.getSystemSetting("TESTING_PHONE_INTERCEPT","+15125548702");
+			params.phone_number = local.env.getSystemSetting("TESTING_PHONE_INTERCEPT",arguments.phone);
 		}
 		var result = call("/v1/verify/call","POST",params);
 		return result;
@@ -134,7 +134,7 @@ component {
 	string function getPhoneNumber(required string phone) {
 		if (controller.getSetting("isLocalDev", false)) {
 			local.env=  new coldbox.system.core.delegates.Env();
-			return local.env.getSystemSetting("TESTING_PHONE_INTERCEPT","+15125548702");
+			return local.env.getSystemSetting("TESTING_PHONE_INTERCEPT",arguments.phone);
 		}
 		return arguments.phone;
 	}
