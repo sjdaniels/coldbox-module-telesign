@@ -1,0 +1,26 @@
+{
+    "name":"Telesign Module",
+    "version":"1.1.0+0001",
+    "author":"Sean Daniels <sdaniels@padawan.net>",
+    "homepage":"https://github.com/sjdaniels/coldbox-module-telesign",
+    "documentation":"https://github.com/sjdaniels/coldbox-module-telesign/blob/master/README.md",
+    "repository":{
+        "type":"git",
+        "URL":"https://github.com/sjdaniels/coldbox-module-telesign.git"
+    },
+    "slug":"telesign",
+    "shortDescription":"A ColdBox Module for Telesign SMS and Voice services",
+    "type":"modules",
+    "packageDirectory":"telesign",
+    "private":true,
+    "engines":[
+        {
+            "type":"lucee",
+            "version":">4.5"
+        },
+        {
+            "type":"adobe",
+            "version":">9.02"
+        }
+    ]
+}
